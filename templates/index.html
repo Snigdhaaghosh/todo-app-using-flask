@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My To-Do List App</title>
+  </head>
+  <body>
+    <h1>Welcome to my To-Do List App!</h1>
+    <form method="POST" action="{{ url_for('delete_tasks') }}" id="taskForm">
+      <ul>
+        {% for task in tasks %}
+        <li>
+          <input
+            type="checkbox"
+            id="task-{{ loop.index }}"
+            name="taskCheckbox"
+            value="{{ loop.index }}"
+          />
+          <label for="task-{{ loop.index }}">{{ task }}</label>
+          {% if 'Completed' in task %}
+          <button type="button" onclick="deleteTask({{ loop.index }})">
+            Delete
+          </button>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </form>
+
+    <button
+      onclick="document.getElementById('taskForm').action='{{ url_for('complete_tasks') }}'; document.getElementById('taskForm').submit();"
+    >
+      Mark Complete
+    </button>
+    <button
+      onclick="document.getElementById('taskForm').action='{{ url_for('delete_tasks') }}'; document.getElementById('taskForm').submit();"
+    >
+      Delete Selected
+    </button>
+
+    <script>
+      function deleteTask(index) {
+          document.getElementById('task-' + index).checked = true;
+          document.getElementById('taskForm').action = '{{ url_for('delete_tasks') }}';
+          document.getElementById('taskForm').submit();
+      }
+    </script>
+
+    <form method="POST" action="{{ url_for('add_task') }}">
+      <label for="newTask">Add Task:</label>
+      <input type="text" id="newTask" name="newTask" required />
+      <button type="submit">Add</button>
+    </form>
+  </body>
+</html>
